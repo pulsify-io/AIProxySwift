@@ -26,7 +26,7 @@ extension ServiceMixin {
         return try T.deserialize(from: data)
     }
 
-    func makeRequestAndDeserializeStreamingChunks<T: Decodable>(_ request: URLRequest) async throws -> AsyncCompactMapSequence<AsyncLineSequence<URLSession.AsyncBytes>, T> {
+    func makeRequestAndDeserializeStreamingChunks<T: Decodable>(_ request: URLRequest) async throws -> AsyncThrowingStream<T, Error> {
         if AIProxy.printRequestBodies {
             printRequestBody(request)
         }
@@ -34,11 +34,20 @@ extension ServiceMixin {
             self.urlSession,
             request
         )
-        return asyncBytes.lines.compactMap {
-            if AIProxy.printResponseBodies {
-                printStreamingResponseChunk($0)
+        
+        return AsyncThrowingStream<T, Error> { continuation in
+            Task(priority: .userInitiated) {
+                do {
+                    for try await line in asyncBytes.lines {
+                        if let object = T.deserialize(fromLine: line) {
+                            continuation.yield(object)
+                        }
+                    }
+                    continuation.finish()
+                } catch {
+                    continuation.finish(throwing: error)
+                }
             }
-            return T.deserialize(fromLine: $0)
         }
     }
 }

@@ -52,7 +52,7 @@ open class MistralDirectService: MistralService, DirectService {
     ///            https://platform.openai.com/docs/api-reference/chat/streaming
     public func streamingChatCompletionRequest(
         body: MistralChatCompletionRequestBody
-    ) async throws -> AsyncCompactMapSequence<AsyncLineSequence<URLSession.AsyncBytes>, MistralChatCompletionStreamingChunk> {
+    ) async throws -> AsyncThrowingStream<MistralChatCompletionStreamingChunk, Error> {
         var body = body
         body.stream = true
         let request = try AIProxyURLRequest.createDirect(

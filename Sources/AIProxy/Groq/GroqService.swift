@@ -28,7 +28,7 @@ public protocol GroqService {
     ///            https://platform.openai.com/docs/api-reference/chat/streaming
     func streamingChatCompletionRequest(
         body: GroqChatCompletionRequestBody
-    ) async throws -> AsyncCompactMapSequence<AsyncLineSequence<URLSession.AsyncBytes>, GroqChatCompletionStreamingChunk>
+    ) async throws -> AsyncThrowingStream<GroqChatCompletionStreamingChunk, Error>
 
     /// Initiates a transcription request to /openai/v1/audio/transcriptions
     ///

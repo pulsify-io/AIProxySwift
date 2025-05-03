@@ -57,7 +57,7 @@ open class MistralProxiedService: MistralService, ProxiedService {
     ///            https://platform.openai.com/docs/api-reference/chat/streaming
     public func streamingChatCompletionRequest(
         body: MistralChatCompletionRequestBody
-    ) async throws -> AsyncCompactMapSequence<AsyncLineSequence<URLSession.AsyncBytes>, MistralChatCompletionStreamingChunk> {
+    ) async throws -> AsyncThrowingStream<MistralChatCompletionStreamingChunk, Error> {
         var body = body
         body.stream = true
         let request = try await AIProxyURLRequest.create(

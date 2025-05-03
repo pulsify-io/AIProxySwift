@@ -27,5 +27,5 @@ public protocol MistralService {
     ///            https://platform.openai.com/docs/api-reference/chat/streaming
     func streamingChatCompletionRequest(
         body: MistralChatCompletionRequestBody
-    ) async throws -> AsyncCompactMapSequence<AsyncLineSequence<URLSession.AsyncBytes>, MistralChatCompletionStreamingChunk>
+    ) async throws -> AsyncThrowingStream<MistralChatCompletionStreamingChunk, Error>
 }

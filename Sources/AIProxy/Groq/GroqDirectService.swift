@@ -56,7 +56,7 @@ open class GroqDirectService: GroqService, DirectService {
     ///            https://platform.openai.com/docs/api-reference/chat/streaming
     public func streamingChatCompletionRequest(
         body: GroqChatCompletionRequestBody
-    ) async throws -> AsyncCompactMapSequence<AsyncLineSequence<URLSession.AsyncBytes>, GroqChatCompletionStreamingChunk> {
+    ) async throws -> AsyncThrowingStream<GroqChatCompletionStreamingChunk, Error> {
         var body = body
         body.stream = true
         let request = try AIProxyURLRequest.createDirect(
