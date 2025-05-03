@@ -6,10 +6,15 @@
 //
 
 import Foundation
+import AsyncHTTPClient
 
 protocol DirectService: ServiceMixin {}
 extension DirectService {
     var urlSession: URLSession {
         return AIProxyUtils.directURLSession()
+    }
+    
+    var httpClient: HTTPClient? {
+        AIProxy.httpClient
     }
 }
