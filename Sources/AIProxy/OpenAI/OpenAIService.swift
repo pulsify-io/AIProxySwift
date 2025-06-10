@@ -33,7 +33,7 @@ public protocol OpenAIService {
     func streamingChatCompletionRequest(
         body: OpenAIChatCompletionRequestBody,
         secondsToWait: UInt
-    ) async throws -> AsyncCompactMapSequence<AsyncLineSequence<URLSession.AsyncBytes>, OpenAIChatCompletionChunk>
+    ) async throws -> AsyncThrowingStream<OpenAIChatCompletionChunk, Error>
     
     /// Initiates a create image request to /v1/images/generations
     ///
@@ -165,7 +165,7 @@ extension OpenAIService {
 
     public func streamingChatCompletionRequest(
         body: OpenAIChatCompletionRequestBody
-    ) async throws -> AsyncCompactMapSequence<AsyncLineSequence<URLSession.AsyncBytes>, OpenAIChatCompletionChunk> {
+    ) async throws -> AsyncThrowingStream<OpenAIChatCompletionChunk, Error> {
         return try await self.streamingChatCompletionRequest(body: body, secondsToWait: 60)
     }
     

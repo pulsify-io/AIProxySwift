@@ -5,6 +5,8 @@ import AppKit
 import UIKit
 #endif
 
+import AsyncHTTPClient
+
 public enum AIProxy {
 
     /// The current sdk version
@@ -82,12 +84,14 @@ public enum AIProxy {
         printRequestBodies: Bool,
         printResponseBodies: Bool,
         resolveDNSOverTLS: Bool,
-        useStableID: Bool
+        useStableID: Bool,
+        preferredClient: AIProxyClientPreference = .urlSession
     ) {
         aiproxyCallerDesiredLogLevel = logLevel
         self.printRequestBodies = printRequestBodies
         self.printResponseBodies = printResponseBodies
         self.resolveDNSOverTLS = resolveDNSOverTLS
+        self.clientPreference = preferredClient
         if useStableID {
             Task.detached {
                 if let stableID = await self._getStableIdentifier() {
@@ -126,6 +130,14 @@ public enum AIProxy {
 
     public static var printRequestBodies: Bool = false
     public static var printResponseBodies: Bool = false
+
+    public static var clientPreference = AIProxyClientPreference.urlSession
+    static var httpClient: HTTPClient? {
+        switch clientPreference {
+        case .urlSession: nil
+        case .httpClient(let httpClient): httpClient
+        }
+    }
 
 
     /// - Parameters:

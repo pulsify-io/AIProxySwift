@@ -6,10 +6,15 @@
 //
 
 import Foundation
+import AsyncHTTPClient
 
 protocol ProxiedService: ServiceMixin {}
 extension ProxiedService {
     var urlSession: URLSession {
         return AIProxyUtils.proxiedURLSession()
+    }
+    
+    var httpClient: HTTPClient? {
+        AIProxy.httpClient
     }
 }
